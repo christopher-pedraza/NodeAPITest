@@ -1,0 +1,12 @@
+.text-field {
+  background-color: rgb(255, 255, 255);
+  border: 2px solid rgb(3, 169, 210);
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 14px;
+  margin-right: 5px;
+}
+
+input:focus {
+  outline: none;
+}

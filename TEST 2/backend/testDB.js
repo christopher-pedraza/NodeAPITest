@@ -15,5 +15,4 @@ const testDb = async () => {
   return null;
 };
 
-testDb();
-// module.exports = { testDb };
+module.exports = { testDb };
