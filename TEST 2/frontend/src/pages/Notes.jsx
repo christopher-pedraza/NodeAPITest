@@ -1,5 +1,6 @@
 import NotesForm from "../components/Notes/NotesForm";
 import NotesList from "../components/Notes/NotesList";
+import Title from "../components/General/Title/Title";
 import { post, get } from "../utils/ApiRequests";
 import { useState, useEffect } from "react";
 
@@ -30,6 +31,7 @@ function Notes() {
 
   return (
     <div>
+      <Title title="Notas" />
       <NotesForm onSubmit={addNote} newNote={newNote} setNewNote={setNewNote} />
       <NotesList notes={notes} />
     </div>
