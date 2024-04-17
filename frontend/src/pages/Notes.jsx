@@ -5,7 +5,13 @@ import { post, get } from "../utils/ApiRequests";
 import { useState, useEffect } from "react";
 
 function Notes() {
+    // Se utiliza un estado para guardar las notas que se obtienen del backend.
+    // Guardarlas en un estado permite que se actualice la vista cuando se
+    // agregue una nueva nota
     const [notes, setNotes] = useState([]);
+    // Se utiliza un estado para guardar la nueva nota que se va a agregar. Esta
+    // se va a ir modificando a medida que el usuario escriba en el formulario
+    // usando un evento onChange
     const [newNote, setNewNote] = useState("");
 
     // Se esta utilizando un useEffect para que se ejecute la peticion GET al cargar la pagina
@@ -66,8 +72,6 @@ function Notes() {
         flexDirection: "column",
         // Alinea horizontalmente
         alignItems: "center",
-        // Alinea verticalmente
-        justifyContent: "center",
         padding: "20px",
         width: "80vw",
         height: "70vh",

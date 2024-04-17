@@ -1,7 +1,5 @@
 import propTypes from "prop-types";
 
-import "./NotesSubmit.css";
-
 const submitButtonStyle = {
     backgroundColor: "white",
     border: "none",

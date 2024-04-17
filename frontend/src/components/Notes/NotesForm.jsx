@@ -1,13 +1,18 @@
-import NotesSubmit from "./NotesSubmit/NotesSubmit";
+import NotesSubmit from "./NotesSubmit";
 import NotesTextField from "./NotesTextField/NotesTextField";
 
 import propTypes from "prop-types";
 
 const formContainerStyle = {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
+    justifyContent: "space-between",
     width: "100%",
     marginBottom: "20px",
+};
+
+const formStyle = {
+    width: "100%",
 };
 
 function NotesForm({ onSubmit, newNote, setNewNote }) {
@@ -19,7 +24,7 @@ function NotesForm({ onSubmit, newNote, setNewNote }) {
 
     return (
         <div style={formContainerStyle}>
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onSubmit} style={formStyle}>
                 <NotesTextField value={newNote} onChange={handleNoteChange} />
                 <NotesSubmit text="Salvar" />
             </form>
