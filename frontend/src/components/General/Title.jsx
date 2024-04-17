@@ -1,5 +1,4 @@
 import propTypes from "prop-types";
-import "./Title.css";
 
 const titleContainerStyle = {
     marginBottom: "20px",
@@ -13,11 +12,17 @@ const titleStyle = {
     textAlign: "center",
 };
 
+const dividerStyle = {
+    borderTop: "2px solid #bbb",
+    borderRadius: "5px",
+    width: "80%",
+};
+
 function Title({ title }) {
     return (
         <div style={titleContainerStyle}>
             <h1 style={titleStyle}>{title}</h1>
-            <hr className="hr-rounded" />
+            <hr style={dividerStyle} />
         </div>
     );
 }

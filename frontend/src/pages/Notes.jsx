@@ -1,6 +1,6 @@
 import NotesForm from "../components/Notes/NotesForm";
 import NotesList from "../components/Notes/NotesList";
-import Title from "../components/General/Title/Title";
+import Title from "../components/General/Title";
 import { post, get } from "../utils/ApiRequests";
 import { useState, useEffect } from "react";
 
