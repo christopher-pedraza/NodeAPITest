@@ -5,6 +5,19 @@ const express = require("express");
 const app = express();
 const { testDb } = require("./testDB");
 
+/* SWAGGER */
+const swaggerUI = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
+const swaggerOptions = {
+    explorer: true,
+};
+// Endpoint de la documentacio de swagger
+app.use(
+    "/api-docs",
+    swaggerUI.serve,
+    swaggerUI.setup(swaggerDocument, swaggerOptions)
+);
+
 //middelware json y cors
 // Cuando llega una peticion, se interpreta como JSON
 app.use(express.json());
@@ -16,93 +29,106 @@ const sequelize = new Sequelize(process.env.DATABASE_URL);
 
 class Note extends Model {}
 Note.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        content: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        important: {
+            type: DataTypes.BOOLEAN,
+        },
+        date: {
+            type: DataTypes.DATE,
+        },
     },
-    content: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    important: {
-      type: DataTypes.BOOLEAN,
-    },
-    date: {
-      type: DataTypes.DATE,
-    },
-  },
-  {
-    sequelize,
-    underscored: true,
-    timestamps: false,
-    modelName: "note",
-  }
+    {
+        sequelize,
+        underscored: true,
+        timestamps: false,
+        modelName: "note",
+    }
 );
 // Inicializar tabla si no existe en la DB
 Note.sync();
 
-//endpoint all notes
 app.get("/api/notes", async (req, res) => {
-  const notes = await Note.findAll();
-  //   const notes = await query("SELECT * FROM notes");
-  //console.log(notes.map(n=>n.toJSON()))
-  res.json(notes);
+    /*
+      #swagger.tags = ['Notes']
+      #swagger.description = 'Endpoint para obtener todas las notas'
+    */
+    const notes = await Note.findAll();
+    //   const notes = await query("SELECT * FROM notes");
+    //console.log(notes.map(n=>n.toJSON()))
+    res.json(notes);
 });
 
 //endpoint create note
 app.post("/api/notes", async (req, res) => {
-  console.log(req.body);
-  const note = await Note.create(req.body);
-  res.json(note);
-});
-
-/*
-otra forma de crear notas, con el uso de build se pueden editar los valores antes de 
-gurdarlos en la DB
-
-const note = Note.build(req.body)
-await note.save()
-*/
-
-/* Manejo de errores basico 
-
-app.post('/api/notes', async (req, res) => {
-  try {
-    const note = await Note.create(req.body)
-    return res.json(note)
-  } catch(error) {
-    return res.status(400).json({ error })
-  }
-})
-
-*/
-
-// obtener una nota
-app.get("/api/notes/:id", async (req, res) => {
-  const note = await Note.findByPk(req.params.id);
-  if (note) {
-    console.log(note.toJSON());
+    /*
+      #swagger.tags = ['Notes']
+    */
+    const { content, important } = req.body;
+    data = { content: content, important: important, data: new Date() };
+    const note = await Note.create(data);
     res.json(note);
-  } else {
-    res.status(404).end();
-  }
 });
 
-//opcion 1
-const PORT = process.env.PORT || 3001;
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
+// Obtener una nota
+app.get("/api/notes/:id", async (req, res) => {
+    /*
+      #swagger.tags = ['Notes']
+    */
+    const note = await Note.findByPk(req.params.id);
+    if (note) {
+        console.log(note.toJSON());
+        res.json(note);
+    } else {
+        res.status(404).end();
+    }
+});
 
-//opcion 2 revisando la conexion a la DB
+// Borrar una nota
+app.delete("/api/notes/:id", async (req, res) => {
+    /*
+      #swagger.tags = ['Notes']
+    */
+    await Note.destroy({
+        where: {
+            id: req.params.id,
+        },
+    });
+    res.status(204).end();
+});
+
+// Actualizar una nota
+app.put("/api/notes/:id", async (req, res) => {
+    /*
+      #swagger.tags = ['Notes']
+    */
+    const { content, important } = req.body;
+    const note = await Note.findByPk(req.params.id);
+    if (note) {
+        note.content = content;
+        note.important = important;
+        await note.save();
+        res.json(note);
+    } else {
+        res.status(404).end();
+    }
+});
+
+const PORT = process.env.PORT || 3001;
 
 const start = async () => {
-  await testDb();
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+    await testDb();
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
 };
 
 start();
